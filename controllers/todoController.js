@@ -1,23 +1,48 @@
-const bodyParser = require('body-parser')
-var data = [{item:"get milk"},{item:"walk time"}, {item: "coding time"}]
+const bodyParser = require("body-parser");
+const mongoose = require("mongoose");
 
-var urlencodedParser = bodyParser.urlencoded({extended:false})
+require("dotenv").config();
 
-module.exports = function(app){
+//connect to database
+mongoose
+  .connect(process.env.MONGODB_URL)
+  .then(() => console.log("Database connected!"))
+  .catch((err) => console.log(err));
 
-    app.get('/todo',(req,res) => {
-        res.render('todo',{todos: data})
-    })
+//create schema
+var todoSchema = new mongoose.Schema({
+  item: String,
+});
 
-    app.post('/todo',urlencodedParser,(req,res) => {
-        data.push(req.body)
-        res.json(data)
-    })
+// create model
+var Todo = mongoose.model("Todo", todoSchema);
 
-    app.delete('/todo/:item',(req,res) => {
-        data = data.filter((todo) => {
-            return todo.item.replace(/ /g,'-') !== req.params.item
-        })
-        res.json(data)
-    })
-}
+var urlencodedParser = bodyParser.urlencoded({ extended: false });
+
+module.exports = function (app) {
+  app.get("/todo", (req, res) => {
+    // get data from mongoDB
+    Todo.find({}, (err, data) => {
+      if (err) throw err;
+      res.render("todo", { todos: data });
+    });
+  });
+
+  app.post("/todo", urlencodedParser, (req, res) => {
+    // get data and add new data to database
+    var newTodo = Todo(req.body).save((err, data) => {
+      if (err) throw err;
+      res.json(data);
+    });
+  });
+
+  app.delete("/todo/:item", (req, res) => {
+    // delete data from mongoDB
+    Todo.find({ item: req.params.item.replace(/\-/g, " ") }).remove(
+      (err, data) => {
+        if (err) throw err;
+        res.json(data);
+      }
+    );
+  });
+};
