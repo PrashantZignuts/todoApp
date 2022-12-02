@@ -36,9 +36,22 @@ module.exports = function (app) {
     });
   });
 
-  app.delete("/todo/:item", (req, res) => {
+  app.put("/todo",urlencodedParser, (req, res) => {
+    // update data in mongoDB
+    console.log(req.body);
+    var id = `${req.body.id}`
+    console.log(id,"iddddds");
+    var item = req.body.item
+    Todo.updateOne({_id: req.body.id},{item: req.body.item},(err,data) => {
+        if (err) throw err;
+        console.log(data,"data updated");
+        res.json(data)
+    })
+  });
+
+  app.delete("/todo/:id", (req, res) => {
     // delete data from mongoDB
-    Todo.find({ item: req.params.item.replace(/\-/g, " ") }).remove(
+    Todo.find({ _id: req.params.id}).remove(
       (err, data) => {
         if (err) throw err;
         res.json(data);

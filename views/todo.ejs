@@ -1,33 +1,68 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <!-- favicon -->
-    <link rel="icon" class="js-site-favicon" type="image/png" href="/assets/logo.png">
+    <link
+      rel="icon"
+      class="js-site-favicon"
+      type="image/png"
+      href="/assets/logo.png"
+    />
 
     <title>Todo List</title>
     <!-- jquery cdn -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
 
     <!-- import static css -->
-    <link rel="stylesheet" href="/assets/styles.css" type="text/css">
+    <link rel="stylesheet" href="/assets/styles.css" type="text/css" />
     <!-- import js file -->
     <script src="/assets/todo-list.js"></script>
-</head>
-<body>
+    <!-- import icons from cdn -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/MaterialDesign-Webfont/7.0.96/css/materialdesignicons.min.css"
+    />
+    <!-- bootstrap cnd imported -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+  </head>
+  <body>
     <h1>My Todo App</h1>
     <div id="todo-table">
-        <form style="display: flex;">
-            <input type="text" name="item" placeholder="Add new item..." required>
-            <button type="submit">Add Item</button>
-        </form>
-        <ul>
-            <% for(let i = 0; i< todos.length; i++){ %>
-                <li><%- todos[i].item %></li>
-                <%}%>
-        </ul>
+      <form style="display: flex">
+        <input type="text" class="itemToAdd" name="item" placeholder="Add new item..." required />
+        <button type="submit" class="add_data">Add Item</button>
+        <button type="submit" class="update_data" style="display: none;">Update Item</button>
+      </form>
+      <div class="container">
+        <% for(let i = 0; i< todos.length; i++){ %>
+        <div class="row">
+          <div class="col-md-3">
+            <ul style="display: flex">
+              <li
+                class="mdi mdi-delete delete_data"
+                id="<%- todos[i].id %>"
+              ></li>
+              <li
+                class="mdi mdi-tooltip-edit edit_data"
+                id="<%- todos[i].id %>"
+                value="<%- todos[i].item %>"
+              ></li>
+            </ul>
+          </div>
+          <div class="col-md-9 content_div">
+            <p><%- todos[i].item %></p>
+          </div>
+        </div>
+        <%}%>
+      </div>
     </div>
-</body>
+  </body>
 </html>
